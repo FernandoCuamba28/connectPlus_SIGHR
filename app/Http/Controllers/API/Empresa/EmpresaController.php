@@ -26,7 +26,7 @@ class EmpresaController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -37,34 +37,35 @@ class EmpresaController extends Controller
      */
     public function store(Request $request)
     {
-        $inscricao->periodo_id=$request->idperiodo;
+
         //metodo para insercao de Empresa
         $empresa = new Empresa();
         $contacto = new Contacto();
 
         $empresa->nome=$request->nome;
         $empresa->email=$request->email;
-        $empresa->endereco=$request->endereco;
+        $empresa->endereco=$request->enderreco;
         $empresa->nuit=$request->nuit;
         $empresa->contribuente=$request->contribuente;
         $empresa->area=$request->area;
 
         $contacto->numero=$request->contacto;
         $contacto->tipo='empresarial';
-       
+
 
         //verifica se a empresa foi cadastrada para poder gravar o contacto
         if ($empresa->save())
         {
-            $empresa->empresa_id=$empresa->id;
+            $contacto->empresa_id=$empresa->id;
+        //se a empresa for cadastrada, o metodo ira persistir o contacto
             $contacto->save();
-            return response()->json(['success'=>'Empresa cadastrada.']);
+            return response()->json(['id'=>$empresa->id]);
         } else
         {
             return response()->json(['error'=>'aconteceu algum erro']);
         }
 
-        
+
     }
 
     /**
@@ -75,7 +76,7 @@ class EmpresaController extends Controller
      */
     public function show(Empresa $empresa)
     {
-        
+        return response()->json(['empresa'=>$empresa]);
     }
 
     /**
@@ -86,7 +87,8 @@ class EmpresaController extends Controller
      */
     public function edit(Empresa $empresa)
     {
-        //
+        //Metodo responsavel por retornar a empresa para posterior edicao
+        return response()->json(['empresa'=>$empresa]);
     }
 
     /**
@@ -98,7 +100,25 @@ class EmpresaController extends Controller
      */
     public function update(Request $request, Empresa $empresa)
     {
-        //
+        $empresa->nome=$request->nome;
+        $empresa->email=$request->email;
+        $empresa->endereco=$request->enderreco;
+        $empresa->nuit=$request->nuit;
+        $empresa->contribuente=$request->contribuente;
+        $empresa->area=$request->area;
+
+        try {
+            //Metodo responsavel por actualizar a Emmpresa
+             $empresa->save();
+            return response()->json(['Sucess'=>'actualizado com sucesso']);
+        } catch (Throwable $e) {
+            report($e);
+
+            return false;
+        }
+
+
+
     }
 
     /**
@@ -109,6 +129,8 @@ class EmpresaController extends Controller
      */
     public function destroy(Empresa $empresa)
     {
-        //
+        $empresa->delete();
+
+
     }
 }
