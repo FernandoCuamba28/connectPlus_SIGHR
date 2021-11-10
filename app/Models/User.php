@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'empresa_id',
     ];
 
     /**
@@ -30,7 +31,7 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token'   
+        'remember_token'
     ];
 
     /**
@@ -49,11 +50,11 @@ class User extends Authenticatable
 
 
     public function sendPasswordResetNotification($token)
-    {   
+    {
 
         $url = 'https://spa.test/reset-password?token=' . $token;
 
         $this->notify(new ResetPasswordNotification($url));
     }
-    
+
 }

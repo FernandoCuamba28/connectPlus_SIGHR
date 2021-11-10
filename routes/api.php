@@ -4,12 +4,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\API\RegisterController;
-use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\ForgotPasswordController;
 use App\Http\Controllers\API\ResetPasswordController;
 use App\Http\Controllers\API\AutenticationController;
 use App\Http\Controllers\API\PasswordResetRequestController;
 use App\Http\Controllers\API\ChangePasswordController;
+use App\Http\Controllers\API\Empresa\EmpresaController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -32,7 +32,9 @@ Route::get('/', function () {
 });
 
 //Rotas da tela login
-Route::post('register', [RegisterController::class, 'register']);
+Route::get('register', [RegisterController::class, 'register'])->name('register');;
+
+//Route::post('register/{request}/{id}', [RegisterController::class, 'register'])->name('register');
 
 Route::post('login', [RegisterController::class, 'login']);
 
@@ -41,6 +43,9 @@ Route::post('reset-password', [PasswordResetRequestController::class, 'sendPassw
 Route::post('change-password', [ChangePasswordController::class, 'passwordResetProcess'])->name('api-reset-password-token');
 
 //Rotas para a Gestao de empresas
+
+
+Route::resource('empresa', EmpresaController::class);
 
 
 
@@ -69,6 +74,6 @@ Route::post('change-password', [ChangePasswordController::class, 'passwordResetP
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::resource('products', ProductController::class);
+
 });
 

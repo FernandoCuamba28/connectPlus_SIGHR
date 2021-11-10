@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\api\Empresa;
 
+use App\Http\Controllers\API\RegisterController;
 use App\Http\Controllers\Controller;
 use App\Models\Empresa\Empresa;
 use App\Models\Contacto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class EmpresaController extends Controller
 {
@@ -26,7 +28,7 @@ class EmpresaController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -37,34 +39,36 @@ class EmpresaController extends Controller
      */
     public function store(Request $request)
     {
-        $inscricao->periodo_id=$request->idperiodo;
         //metodo para insercao de Empresa
+        $registerController = new RegisterController;
         $empresa = new Empresa();
         $contacto = new Contacto();
 
         $empresa->nome=$request->nome;
-        $empresa->email=$request->email;
-        $empresa->endereco=$request->endereco;
+        $empresa->email=$request->emailempresarial;
+        $empresa->endereco=$request->enderreco;
         $empresa->nuit=$request->nuit;
         $empresa->contribuente=$request->contribuente;
         $empresa->area=$request->area;
-
         $contacto->numero=$request->contacto;
         $contacto->tipo='empresarial';
-       
 
         //verifica se a empresa foi cadastrada para poder gravar o contacto
         if ($empresa->save())
         {
-            $empresa->empresa_id=$empresa->id;
-            $contacto->save();
-            return response()->json(['success'=>'Empresa cadastrada.']);
+            $contacto->empresa_id=$empresa->id;
+        //se a empresa for cadastrada, o metodo ira persistir o contacto
+                if($contacto->save()){
+                    return $registerController->register($request,$empresa->id);
+                }
+
+
         } else
         {
             return response()->json(['error'=>'aconteceu algum erro']);
         }
 
-        
+
     }
 
     /**
@@ -75,7 +79,7 @@ class EmpresaController extends Controller
      */
     public function show(Empresa $empresa)
     {
-        
+        return response()->json(['empresa'=>$empresa]);
     }
 
     /**
@@ -86,7 +90,8 @@ class EmpresaController extends Controller
      */
     public function edit(Empresa $empresa)
     {
-        //
+        //Metodo responsavel por retornar a empresa para posterior edicao
+        return response()->json(['empresa'=>$empresa]);
     }
 
     /**
@@ -98,7 +103,25 @@ class EmpresaController extends Controller
      */
     public function update(Request $request, Empresa $empresa)
     {
-        //
+        $empresa->nome=$request->nome;
+        $empresa->email=$request->email;
+        $empresa->endereco=$request->enderreco;
+        $empresa->nuit=$request->nuit;
+        $empresa->contribuente=$request->contribuente;
+        $empresa->area=$request->area;
+
+        try {
+            //Metodo responsavel por actualizar a Emmpresa
+             $empresa->save();
+            return response()->json(['Sucess'=>'actualizado com sucesso']);
+        } catch (Throwable $e) {
+            report($e);
+
+            return false;
+        }
+
+
+
     }
 
     /**
@@ -109,6 +132,8 @@ class EmpresaController extends Controller
      */
     public function destroy(Empresa $empresa)
     {
-        //
+        $empresa->delete();
+
+
     }
 }
