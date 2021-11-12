@@ -18,7 +18,9 @@ class EmpresaController extends Controller
      */
     public function index()
     {
-        //
+         $user = auth()->user()->empresa_id;
+         $empresa= Empresa::where('id',$user )->first();
+        return response()->json(['empresa'=>$empresa]);
     }
 
     /**
@@ -40,7 +42,9 @@ class EmpresaController extends Controller
     public function store(Request $request)
     {
         //metodo para insercao de Empresa
+        //o codigo abaixo, faz a invocacao do metodo register controller, responsavel pelo cadastro de Utilizadores
         $registerController = new RegisterController;
+
         $empresa = new Empresa();
         $contacto = new Contacto();
 
@@ -79,6 +83,7 @@ class EmpresaController extends Controller
      */
     public function show(Empresa $empresa)
     {
+        
         return response()->json(['empresa'=>$empresa]);
     }
 
@@ -111,7 +116,7 @@ class EmpresaController extends Controller
         $empresa->area=$request->area;
 
         try {
-            //Metodo responsavel por actualizar a Emmpresa
+            //Metodo responsavel por actualizar a Empresa
              $empresa->save();
             return response()->json(['Sucess'=>'actualizado com sucesso']);
         } catch (Throwable $e) {

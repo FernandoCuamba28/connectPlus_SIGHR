@@ -10,6 +10,8 @@ use App\Http\Controllers\API\AutenticationController;
 use App\Http\Controllers\API\PasswordResetRequestController;
 use App\Http\Controllers\API\ChangePasswordController;
 use App\Http\Controllers\API\Empresa\EmpresaController;
+use App\Http\Controllers\API\Empresa\DepartamentoController;
+use App\Http\Controllers\API\Empresa\FiliarController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -43,10 +45,19 @@ Route::post('reset-password', [PasswordResetRequestController::class, 'sendPassw
 Route::post('change-password', [ChangePasswordController::class, 'passwordResetProcess'])->name('api-reset-password-token');
 
 //Rotas para a Gestao de empresas
-
-
 Route::resource('empresa', EmpresaController::class);
 
+
+
+Route::group(['middleware'=>['auth:sanctum']],function(){
+   
+//Rotas para a Gestao de departamentos
+Route::resource('departamento', DepartamentoController::class);
+
+//Rotas para a Gestao de Filiais
+Route::resource('filiar', FiliarController::class);
+
+});
 
 
 
