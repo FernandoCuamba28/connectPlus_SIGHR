@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
+<<<<<<< HEAD
 use App\Models\Contacto;
 use App\Models\Empresa\Empresa;
+=======
+>>>>>>> 6b7fc4cc27f7e18cfe18259ff25e3a0df22c2e9d
 use Illuminate\Http\Request;
 use App\Http\Controllers\API\BaseController as BaseController;
 use App\Models\User;
@@ -37,6 +40,7 @@ class RegisterController extends BaseController
 
         $input['empresa_id'] = $id;
         $input['password'] = bcrypt($input['password']);
+        $input['empresa_id'] = 1;
         $user = User::create($input);
         $success['token'] =  $user->createToken('MyApp')->plainTextToken;
         $success['name'] =  $user->name;
@@ -61,6 +65,7 @@ class RegisterController extends BaseController
         else{
             return $this->sendError('Unauthorised.', ['error'=>'Unauthorised']);
         }
+<<<<<<< HEAD
     }
 
 
@@ -96,5 +101,7 @@ class RegisterController extends BaseController
         }
 
 
+=======
+>>>>>>> 6b7fc4cc27f7e18cfe18259ff25e3a0df22c2e9d
     }
 }
